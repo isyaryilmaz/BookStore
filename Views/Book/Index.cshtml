@@ -1,0 +1,69 @@
+﻿@model List<BookStoreMvc.Models.BookWithStatusViewModel>
+
+@{
+    ViewBag.Title = "Kitaplar";
+}
+
+<h2>Kitaplar</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Kitap</th>
+            <th>Kategori</th>
+            <th>Fiyat</th>
+            <th>Favori</th>
+            <th>Sepete Ekle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Book.Title</td>
+                <td>@item.Book.Category?.Name</td>
+                <td>@item.Book.Price.ToString("C")</td>
+                <td>
+                    <button class="btn btn-link favorite-btn" data-id="@item.Book.Id" title="Favorilere ekle/çıkar">
+                        <i class="fa fa-star @(item.IsFavorite ? "text-warning" : "text-secondary")"></i>
+                    </button>
+                </td>
+                <td>
+                    @if (!item.IsInCart)
+                    {
+                        <a asp-controller="Cart" asp-action="AddToCart" asp-route-id="@item.Book.Id" class="btn btn-primary btn-sm">Sepete Ekle</a>
+                    }
+                    else
+                    {
+                        <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@item.Book.Id" class="btn btn-danger btn-sm">Sepetten Çıkar</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(function () {
+            $('.favorite-btn').click(function () {
+                var button = $(this);
+                var bookId = button.data('id');
+                var isFavorite = button.find('i').hasClass('text-warning');
+
+                var url = isFavorite ? '/Favorites/RemoveFromFavoritesAjax' : '/Favorites/AddToFavoritesAjax';
+
+                $.post(url, { id: bookId }, function (response) {
+                    if (response.success) {
+                        if (isFavorite) {
+                            button.find('i').removeClass('text-warning').addClass('text-secondary');
+                        } else {
+                            button.find('i').removeClass('text-secondary').addClass('text-warning');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

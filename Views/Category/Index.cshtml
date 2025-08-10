@@ -1,0 +1,13 @@
+﻿@model List<BookStoreMvc.Models.Category>
+
+<h2>Kategoriler</h2>
+
+<ul>
+    @foreach (var category in Model)
+    {
+        <li>
+            <a asp-controller="Category" asp-action="Details" asp-route-id="@category.Id">@category.Name</a>
+            ( @category.Books?.Count() ?? 0 kitap )
+        </li>
+    }
+</ul>

@@ -1,0 +1,17 @@
+﻿@model BookStoreMvc.Models.Category
+
+<h2>@Model.Name Kategorisindeki Kitaplar</h2>
+
+@if (Model.Books != null && Model.Books.Any())
+{
+    <ul>
+        @foreach (var book in Model.Books)
+        {
+            <li>@book.Title - @book.Price.ToString("C")</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Bu kategoride henüz kitap bulunmamaktadır.</p>
+}

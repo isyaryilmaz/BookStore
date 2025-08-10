@@ -1,0 +1,52 @@
+﻿@model List<BookStoreMvc.Models.Book>
+
+@{
+    ViewBag.Title = "Sepetim";
+}
+
+<h2>Sepetim</h2>
+
+@if (TempData["OrderMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["OrderMessage"]
+    </div>
+}
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">Sepetinizde ürün bulunmamaktadır.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Kitap</th>
+                <th>Kategori</th>
+                <th>Fiyat</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Category?.Name</td>
+                    <td>@book.Price.ToString("C")</td>
+                    <td>
+                        <a asp-controller="Cart" asp-action="RemoveFromCart" asp-route-id="@book.Id" class="btn btn-danger btn-sm">
+                            Sepetten Çıkar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4>Toplam Tutar: <strong class="text-success">@ViewBag.TotalPrice.ToString("N2")</strong></h4>
+
+    <form asp-action="ConfirmOrder" method="post">
+        <button type="submit" class="btn btn-primary">Siparişi Onayla</button>
+    </form>
+}

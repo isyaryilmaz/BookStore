@@ -1,0 +1,47 @@
+﻿@model List<BookStoreMvc.Models.Order>
+
+@{
+    ViewBag.Title = "Sipariş Geçmişi";
+}
+
+<h2>Sipariş Geçmişi</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Henüz siparişiniz bulunmamaktadır.</div>
+}
+else
+{
+    foreach (var order in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Sipariş Tarihi: @order.OrderDate.ToString("dd MMM yyyy HH:mm")
+                <span class="float-end">Toplam: @order.TotalPrice.ToString("C")</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>Kitap</th>
+                            <th>Adet</th>
+                            <th>Birim Fiyat</th>
+                            <th>Tutar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in order.Items)
+                        {
+                            <tr>
+                                <td>@item.Book.Title</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.Price.ToString("C")</td>
+                                <td>@(item.Quantity* item.Price).ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
